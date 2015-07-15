@@ -6,7 +6,7 @@
 	</div>
 	<div class="form-group">
 		<label>Domain</label>
-		<select class="form-control" name="domain_id" type="text">
+		<select class="form-control" name="domain" type="text">
 			<% @domains.each do |domain| %>
 				<option value="<%= domain.id %>">
 					<%= domain.name %>

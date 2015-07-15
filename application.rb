@@ -21,16 +21,24 @@ get '/add' do
 end
 
 post '/add' do
-  record = Record.new(:name => params['subdomain'], :content => params['ip'])
-  if record.save
-    record_token = RecordToken.new(:record => record)
-    record_token.save
-    flash[:success] = 'Your host has been created'
-    redirect to('/added/' + record_token.token)
-  else
-    @error = record.errors.first[0]
-    erb :add
+  begin
+    record = Record.new(
+      :name => params['subdomain'],
+      :domain => Domain.get!(params['domain']), # DataMapper::ObjectNotFoundError
+      :content => params['ip']
+    )
+    if record.save
+      record_token = RecordToken.new(:record => record)
+      record_token.save
+      flash[:success] = 'Your host has been created'
+      redirect to('/added/' + record_token.token)
+    else
+      @error = record.errors.first[0]
+    end
+  rescue DataMapper::ObjectNotFoundError
+    @error = 'Something bad happened'
   end
+  @domains = Domain.all
   erb :add
 end
 
