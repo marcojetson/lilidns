@@ -39,6 +39,8 @@ class Record
       [false, 'Host is not valid']
     elsif not IPAddress.valid? self.content
       [false, 'IP address is not valid']
+    elsif Record.count(:name => self.name, :domain => self.domain) > 0
+      [false, 'Host already exists']
     else
       true
     end

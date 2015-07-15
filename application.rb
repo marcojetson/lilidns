@@ -24,7 +24,7 @@ post '/add' do
   begin
     record = Record.new(
       :name => params['subdomain'],
-      :domain => Domain.get!(params['domain']), # DataMapper::ObjectNotFoundError
+      :domain => Domain.get!(params['domain']),
       :content => params['ip']
     )
     if record.save
