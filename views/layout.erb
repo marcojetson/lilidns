@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+	<head>
+		<title><%= defined?(@title) ? @title : settings.name %></title>
+		<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/static/css/theme.css">
+	</head>
+	<body>
+		<div class="wrapper">
+			<header class="header">
+				<a class="brand" href="/"><%= settings.name %></a>
+				<p class="lead"><%= settings.title %></p>
+			</header>
+			<% flash.each do |category, message| %>.
+     			<div class="alert alert-<%= category %>"><%= message %></div>
+			<% end %>
+			<%= yield %>
+		</div>
+		<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="/static/js/ZeroClipboard.min.js"></script>
+		<script src="/static/js/app.js"></script>
+	</body>
+</html>

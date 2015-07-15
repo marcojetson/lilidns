@@ -1,0 +1,12 @@
+<div class="form-group">
+    <label>Update token</label>
+    <div class="input-group">
+        <input class="form-control" type="text" value="<%= h params['token'] %>" readonly>
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="button" data-clipboard-text="<%= h params['token'] %>">
+                <i class="glyphicon glyphicon-copy"></i>
+            </button>
+        </span>
+    </div>
+    <p class="help-block">Keep this, it's useful.</p>
+</div>

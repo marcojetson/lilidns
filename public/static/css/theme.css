@@ -1,0 +1,36 @@
+body {
+	margin: 0;
+}
+
+.wrapper {
+	margin: 0 auto;
+	max-width: 480px;
+}
+
+.header {
+	margin: 20px 0;
+}
+
+.header .brand {
+	background-image: url('../img/logo.png');
+	background-size: 100% 100%;
+	display: block;
+	height: 120px;
+	margin: 0 auto;
+	text-indent: -1000em;
+	width: 160px;
+}
+
+.header, .message {
+	text-align: center;
+}
+
+.btn.btn-unpretentious:hover,
+.btn.btn-unpretentious:focus,
+.btn.btn-unpretentious:focus {
+		color: #2780e3;
+}
+
+.btn.btn-unpretentious:active {
+	box-shadow: none;
+}
