@@ -1,2 +1,5 @@
+.DS_Store
+
+/environment.rb
 /Gemfile.lock
 /lilidns.db

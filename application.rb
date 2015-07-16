@@ -1,4 +1,5 @@
 require 'json'
+require 'pony'
 require 'sinatra'
 require 'sinatra/flash'
 require 'sinatra/subdomain'
@@ -6,6 +7,11 @@ require File.join(Dir.pwd, 'settings')
 require File.join(Dir.pwd, 'assets')
 require File.join(Dir.pwd, 'helpers')
 require File.join(Dir.pwd, 'models')
+
+environment = File.join(Dir.pwd, 'environment')
+if File.exists?(environment + '.rb')
+  require environment
+end
 
 enable :sessions
 
@@ -62,6 +68,12 @@ end
 
 get '/added/:token' do
   erb :added
+end
+
+post '/sendmail' do
+  Pony.mail :to => params[:email], :from => settings.email, :subject => 'Your update token', :body => 'Your update token is ' + h(params['token']) + ', keep it safe.'
+  flash[:success] = 'Email sent'
+  redirect to('/added/' + params['token'])
 end
 
 get '/update' do

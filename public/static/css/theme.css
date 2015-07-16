@@ -41,3 +41,15 @@ body {
 	right: 0; 
 	top: 0;
 }
+
+.input-group-btn.split .dropdown-toggle {
+	border-left: 1px solid #000000;
+	padding: 10px;
+}
+
+#send-by-email {
+	border-top: 1px solid #e6e6e6;
+	display: none;
+	margin-top: 21px;
+    padding-top: 21px;
+}
