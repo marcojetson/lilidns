@@ -4,6 +4,8 @@ require 'securerandom'
 
 DataMapper::setup(:default, settings.database)
 
+DataMapper::Model.raise_on_save_failure = true 
+
 # pdns models
 
 class Domain
@@ -32,29 +34,15 @@ class Record
 
   belongs_to :domain, :required => false
 
-  validates_with_method :check_host
-  before :save, :build_host
-
-  def check_host
-    if self.type != 'A'
-      return true
-    end
-
-    if not self.name =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/
-      [false, 'Host is not valid']
+  def save
+    if false and not self.name =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/ # TODO fix
+      raise ArgumentError, 'Host is not valid'
     elsif not IPAddress.valid? self.content
-      [false, 'IP address is not valid']
-    elsif Record.count(:name => self.name, :domain => self.domain) > 0
-      [false, 'Host already exists']
-    else
-      true
+      raise ArgumentError, 'IP address is not valid'
+    elsif Record.count(:id.not => self.id, :name => self.name, :domain => self.domain) > 0
+      raise ArgumentError, 'Host already exists'
     end
-  end
-
-  def build_host
-    if self.type == 'A'
-      self.name = self.name + '.' + self.domain.name
-    end
+    super
   end
 end
 

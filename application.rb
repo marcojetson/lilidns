@@ -22,23 +22,23 @@ end
 
 post '/add' do
   begin
+    domain = Domain.get!(params['domain'])
     record = Record.new(
-      :name => params['subdomain'],
-      :domain => Domain.get!(params['domain']),
+      :name => params['subdomain'] + '.' + domain.name,
+      :domain => domain,
       :content => params['ip'],
       :ttl => settings.ttl,
       :type => 'A'
     )
-    if record.save
-      record_token = RecordToken.new(:record => record)
-      record_token.save
-      flash[:success] = 'Your host has been created'
-      redirect to('/added/' + record_token.token)
-    else
-      @error = record.errors.first[0]
-    end
+    record.save
+    record_token = RecordToken.new(:record => record)
+    record_token.save
+    flash[:success] = 'Your host has been created'
+    redirect to('/added/' + record_token.token)
   rescue DataMapper::ObjectNotFoundError
     @error = 'Something bad happened'
+  rescue ArgumentError => e
+    @error = e.message
   end
   @domains = Domain.all
   erb :add
@@ -53,18 +53,17 @@ get '/update' do
 end
 
 post '/update' do
-  record_token = RecordToken.first(:token => params['token'])
-  if record_token
+  begin
+    record_token = RecordToken.first(:token => params['token']) or raise ArgumentError, 'Can not find host'
     record = record_token.record
     record.content = params['ip']
-    if record.save
-      flash[:success] = 'Your host has been updated.'
-      redirect to('/update')
-    else
-      @error = 'Something happened'
-    end
-  else
-    @error = 'Invalid token'
+    record.save
+    flash[:success] = 'Your host has been updated.'
+    redirect to('/update')
+  rescue ArgumentError => e
+    @error = e.message
+  rescue
+    @error = 'Something bad happened'
   end
   erb :update
 end
