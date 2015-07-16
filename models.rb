@@ -35,7 +35,7 @@ class Record
   belongs_to :domain, :required => false
 
   def save
-    if self.type == 'A':
+    if self.type == 'A'
       if not self.name.gsub(/.#{Regexp.escape(domain.name)}$/, '') =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/
         raise ArgumentError, 'Host is not valid'
       elsif not IPAddress.valid? self.content
