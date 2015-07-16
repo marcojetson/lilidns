@@ -10,14 +10,14 @@ require File.join(Dir.pwd, 'models')
 enable :sessions
 
 subdomain :api do
-  get '/update' do
+  post '/update' do
     content_type :json
     begin
-      record_token = RecordToken.first(:token => params['token']) or raise ArgumentError, 'Can not find host'
+      record_token = RecordToken.first(:token => env['HTTP_AUTHORIZATION']) or raise ArgumentError, 'Can not find host'
       record = record_token.record
       record.content = params['ip'] || request.ip 
       record.save
-      @error = ''
+      @error = false
     rescue ArgumentError => e
       @error = e.message
     rescue
