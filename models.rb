@@ -35,12 +35,14 @@ class Record
   belongs_to :domain, :required => false
 
   def save
-    if not self.name.gsub(/.#{Regexp.escape(domain.name)}$/, '') =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/
-      raise ArgumentError, 'Host is not valid'
-    elsif not IPAddress.valid? self.content
-      raise ArgumentError, 'IP address is not valid'
-    elsif Record.count(:id.not => self.id, :name => self.name, :domain => self.domain) > 0
-      raise ArgumentError, 'Host already exists'
+    if self.type == 'A':
+      if not self.name.gsub(/.#{Regexp.escape(domain.name)}$/, '') =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/
+        raise ArgumentError, 'Host is not valid'
+      elsif not IPAddress.valid? self.content
+        raise ArgumentError, 'IP address is not valid'
+      elsif Record.count(:id.not => self.id, :name => self.name, :domain => self.domain) > 0
+        raise ArgumentError, 'Host already exists'
+      end
     end
     super
   end
