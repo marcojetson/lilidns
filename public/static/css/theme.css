@@ -34,3 +34,10 @@ body {
 .btn.btn-unpretentious:active {
 	box-shadow: none;
 }
+
+.fork-me {
+	border: 0;
+	position: absolute;
+	right: 0; 
+	top: 0;
+}
