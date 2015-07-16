@@ -11,7 +11,7 @@
 					<a class="brand" href="/"><%= settings.name %></a>
 					<p class="lead"><%= settings.title %></p>
 				</header>
-				<% flash.each do |category, message| %>.
+				<% flash.each do |category, message| %>
 	     			<div class="alert alert-<%= category %>"><%= message %></div>
 				<% end %>
 				<%= yield %>
