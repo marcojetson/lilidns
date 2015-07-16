@@ -5,13 +5,13 @@ assets {
   serve '/static/css', from: 'public/static/css'
   serve '/static/img', from: 'public/static/img'
 
-  js :main, '/public/static/js/build.js', [
+  js :main, '/static/js/build.js', [
     '/static/js/ZeroClipboard.min.js',
     '/static/js/jquery.notification.js',
     '/static/js/app.js'
   ]
 
-  css :main, '/public/static/css/build.css', [
+  css :main, '/static/css/build.css', [
     '/static/css/bootstrap.min.css',
     '/static/css/theme.css',
     '/static/css/notification.css'
