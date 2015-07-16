@@ -21,9 +21,9 @@ class Record
   include DataMapper::Resource
   property :id, Serial
   property :name, String, :length => 255
-  property :type, String, :length => 10, :default => 'A'
+  property :type, String, :length => 10
   property :content, String, :length => 65535
-  property :ttl, Integer, :default => 60
+  property :ttl, Integer
   property :prio, Integer
   property :change_date, Integer
   property :disabled, Boolean, :required => true, :default => false
@@ -33,8 +33,13 @@ class Record
   belongs_to :domain, :required => false
 
   validates_with_method :check_host
+  before :save, :build_host
 
   def check_host
+    if self.type != 'A'
+      return true
+    end
+
     if not self.name =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/
       [false, 'Host is not valid']
     elsif not IPAddress.valid? self.content
@@ -43,6 +48,12 @@ class Record
       [false, 'Host already exists']
     else
       true
+    end
+  end
+
+  def build_host
+    if self.type == 'A'
+      self.name = self.name + '.' + self.domain.name
     end
   end
 end
@@ -117,10 +128,28 @@ Cryptokey.auto_upgrade!
 Tsigkey.auto_upgrade!
 RecordToken.auto_upgrade!
 
-settings.domains.each do |domain|
+settings.domains.each do |domain_name|
   begin
-    domain = Domain.new(:name => domain, :type => 'SOA')
+    domain = Domain.new(:name => domain_name, :type => 'NATIVE')
     domain.save
+
+    Record.new(
+      :name => domain.name,
+      :content => 'localhost x@' + domain.name,
+      :type => 'SOA',
+      :ttl => 86400,
+      :domain => domain
+    ).save
+
+    settings.nameservers.each do |nameserver_name|
+      Record.new(
+        :name => domain.name,
+        :content => nameserver_name,
+        :type => 'NS',
+        :ttl => 86400,
+        :domain => domain
+      ).save
+    end
   rescue DataObjects::IntegrityError
   end
 end

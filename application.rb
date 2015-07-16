@@ -25,7 +25,9 @@ post '/add' do
     record = Record.new(
       :name => params['subdomain'],
       :domain => Domain.get!(params['domain']),
-      :content => params['ip']
+      :content => params['ip'],
+      :ttl => settings.ttl,
+      :type => 'A'
     )
     if record.save
       record_token = RecordToken.new(:record => record)

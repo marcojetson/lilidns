@@ -6,3 +6,4 @@ set :title, 'Free and simple dynamic DNS'
 
 set :domains, ['lilidns.net']
 set :ttl, 60
+set :nameservers, ['ns1.lilidns.com', 'ns2.lilidns.com']
