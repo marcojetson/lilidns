@@ -1,40 +1,11 @@
 require 'sinatra'
-require 'sinatra/assetpack'
 require 'sinatra/flash'
 require File.join(Dir.pwd, 'settings')
+require File.join(Dir.pwd, 'assets')
+require File.join(Dir.pwd, 'helpers')
 require File.join(Dir.pwd, 'models')
 
 enable :sessions
-set :root, Dir.pwd
-
-register Sinatra::AssetPack
-
-assets {
-  serve '/static/js', from: 'public/static/js'
-  serve '/static/css', from: 'public/static/css'
-  serve '/static/img', from: 'public/static/img'
-
-  js :main, '/public/static/js/build.js', [
-    '/static/js/ZeroClipboard.min.js',
-    '/static/js/jquery.notification.js',
-    '/static/js/app.js'
-  ]
-
-  css :main, '/public/static/css/build.css', [
-    '/static/css/bootstrap.min.css',
-    '/static/css/theme.css',
-    '/static/css/notification.css'
-  ]
-
-  js_compression  :jsmin
-  css_compression :simple
-}
-
-helpers do
-  def h(text)
-    Rack::Utils.escape_html(text)
-  end
-end
 
 get '/' do
   redirect to('/add')
