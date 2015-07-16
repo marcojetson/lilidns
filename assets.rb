@@ -6,7 +6,7 @@ assets {
   serve '/static/img', from: 'public/static/img'
 
   js :main, '/static/js/build.js', [
-    '/static/js/bootstrap.js',
+    '/static/js/bootstrap.min.js',
     '/static/js/ZeroClipboard.min.js',
     '/static/js/jquery.notification.js',
     '/static/js/app.js'
