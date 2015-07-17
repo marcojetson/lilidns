@@ -1,5 +1,5 @@
-set :views, "#{Dir.pwd}/views"
-set :database, "sqlite3://#{Dir.pwd}/lilidns.db"
+set :views, "#{File.dirname(__FILE__)}/views"
+set :database, "sqlite3://#{File.dirname(__FILE__)}/lilidns.db"
 
 set :name, 'lilidns'
 set :title, 'Free and simple dynamic DNS'

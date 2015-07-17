@@ -3,12 +3,12 @@ require 'pony'
 require 'sinatra'
 require 'sinatra/flash'
 require 'sinatra/subdomain'
-require File.join(Dir.pwd, 'settings')
-require File.join(Dir.pwd, 'assets')
-require File.join(Dir.pwd, 'helpers')
-require File.join(Dir.pwd, 'models')
+require File.join(File.dirname(__FILE__), 'settings')
+require File.join(File.dirname(__FILE__), 'assets')
+require File.join(File.dirname(__FILE__), 'helpers')
+require File.join(File.dirname(__FILE__), 'models')
 
-environment = File.join(Dir.pwd, 'environment')
+environment = File.join(File.dirname(__FILE__), 'environment')
 if File.exists?(environment + '.rb')
   require environment
 end
