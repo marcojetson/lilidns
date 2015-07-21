@@ -1,5 +1,5 @@
 require 'data_mapper'
-require 'ipaddress'
+require 'resolv'
 require 'securerandom'
 
 DataMapper::setup(:default, settings.database)
@@ -34,17 +34,22 @@ class Record
 
   belongs_to :domain, :required => false
 
-  def save
-    if self.type == 'A'
-      if not self.name.gsub(/.#{Regexp.escape(domain.name)}$/, '') =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/
-        raise ArgumentError, 'Host is not valid'
-      elsif not IPAddress.valid? self.content
-        raise ArgumentError, 'IP address is not valid'
-      elsif Record.count(:id.not => self.id, :name => self.name, :domain => self.domain) > 0
-        raise ArgumentError, 'Host already exists'
-      end
+  def save_host
+    if not self.name.gsub(/.#{Regexp.escape(domain.name)}$/, '') =~ /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$/
+      raise ArgumentError, 'Host is not valid'
+    elsif not self.content =~ Resolv::IPv4::Regex and not self.content =~ Resolv::IPv6::Regex
+      raise ArgumentError, 'IP address is not valid'
+    elsif Record.count(:id.not => self.id, :name => self.name, :domain => self.domain) > 0
+      raise ArgumentError, 'Host already exists'
     end
-    super
+
+    if self.content =~ Resolv::IPv6::Regex
+      self.type = 'AAAA'
+    elsif self.content =~ Resolv::IPv4::Regex
+      self.type = 'A'
+    end
+
+    self.save
   end
 end
 

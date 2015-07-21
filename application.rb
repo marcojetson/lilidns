@@ -22,7 +22,7 @@ subdomain :api do
       record_token = RecordToken.first(:token => env['HTTP_AUTHORIZATION']) or raise ArgumentError, 'Can not find host'
       record = record_token.record
       record.content = params['ip'] || request.ip 
-      record.save
+      record.save_host
       @error = false
     rescue ArgumentError => e
       @error = e.message
@@ -52,7 +52,7 @@ post '/add' do
       :ttl => settings.ttl,
       :type => 'A'
     )
-    record.save
+    record.save_host
     record_token = RecordToken.new(:record => record)
     record_token.save
     flash[:success] = 'Your host has been created'
@@ -85,7 +85,7 @@ post '/update' do
     record_token = RecordToken.first(:token => params['token']) or raise ArgumentError, 'Can not find host'
     record = record_token.record
     record.content = params['ip']
-    record.save
+    record.save_host
     flash[:success] = 'Your host has been updated.'
     redirect to('/update')
   rescue ArgumentError => e
